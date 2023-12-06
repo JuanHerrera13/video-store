@@ -4,6 +4,8 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
+
 @Data
 @Document(collection = "movies")
 public class Movie {
@@ -15,8 +17,11 @@ public class Movie {
 
     private String description;
 
-    public Movie(String title, String description) {
-        this.title = title;
-        this.description = description;
-    }
+    private String director;
+
+    private List<String> cast;
+
+    private boolean available;
+
+    private Integer numberOfCopies;
 }
