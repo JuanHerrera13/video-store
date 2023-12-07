@@ -1,0 +1,7 @@
+${AnsiColor.GREEN}   __     ___     _                 ____  _
+${AnsiColor.GREEN}   \ \   / (_) __| | ___  ___      / ___|| |_ ___  _ __ ___
+${AnsiColor.GREEN}    \ \ / /| |/ _` |/ _ \/ _ \ ____\___ \| __/ _ \| '__/ _ \
+${AnsiColor.GREEN}     \ V / | | (_| |  __/ (_) |_____|__) | || (_) | | |  __/
+${AnsiColor.GREEN}      \_/  |_|\__,_|\___|\___/     |____/ \__\___/|_|  \___|
+${AnsiColor.BRIGHT_GREEN}:: Spring Boot ::                            (v3.2.0)
+${AnsiColor.DEFAULT}
