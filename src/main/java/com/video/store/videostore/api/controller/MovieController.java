@@ -1,19 +1,21 @@
 package com.video.store.videostore.api.controller;
 
+import com.video.store.videostore.api.dto.MovieDto;
 import com.video.store.videostore.domain.service.MovieService;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping("/movie")
+@RequiredArgsConstructor
+@RequestMapping("/video-store")
 public class MovieController {
 
-    @Autowired
-    private MovieService movieService;
+    private final MovieService movieService;
 
-    /**
-     * TODO
-     * Create APIs to manage movies
-     */
+    @PostMapping("/movies.add")
+    @ResponseStatus(HttpStatus.CREATED)
+    public MovieDto addMovie(@RequestBody MovieDto movieDto) {
+        return this.movieService.addMovie(movieDto);
+    }
 }
