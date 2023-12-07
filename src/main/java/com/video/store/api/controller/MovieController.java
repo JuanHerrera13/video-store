@@ -1,7 +1,7 @@
-package com.video.store.videostore.api.controller;
+package com.video.store.api.controller;
 
-import com.video.store.videostore.api.dto.MovieDto;
-import com.video.store.videostore.domain.service.MovieService;
+import com.video.store.api.dto.MovieDto;
+import com.video.store.domain.service.MovieService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.web.bind.annotation.*;

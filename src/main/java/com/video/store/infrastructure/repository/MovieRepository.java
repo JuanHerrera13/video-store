@@ -1,6 +1,6 @@
-package com.video.store.videostore.infrastructure.repository;
+package com.video.store.infrastructure.repository;
 
-import com.video.store.videostore.domain.entity.Movie;
+import com.video.store.domain.entity.Movie;
 import org.springframework.data.mongodb.repository.MongoRepository;
 import org.springframework.stereotype.Repository;
 

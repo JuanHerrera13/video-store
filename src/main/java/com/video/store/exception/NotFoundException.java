@@ -1,4 +1,4 @@
-package com.video.store.videostore.exception;
+package com.video.store.exception;
 
 public class NotFoundException extends RuntimeException {
 

@@ -1,4 +1,4 @@
-package com.video.store.videostore.domain.entity;
+package com.video.store.domain.entity;
 
 import lombok.Data;
 import org.springframework.data.annotation.Id;

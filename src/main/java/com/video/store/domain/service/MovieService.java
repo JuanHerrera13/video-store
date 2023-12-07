@@ -1,19 +1,19 @@
-package com.video.store.videostore.domain.service;
+package com.video.store.domain.service;
 
-import com.video.store.videostore.api.dto.MovieDto;
-import com.video.store.videostore.api.mapping.MovieMapper;
-import com.video.store.videostore.domain.entity.Movie;
-import com.video.store.videostore.exception.MovieException;
-import com.video.store.videostore.exception.NotFoundException;
-import com.video.store.videostore.infrastructure.repository.MovieRepository;
+import com.video.store.api.dto.MovieDto;
+import com.video.store.api.mapping.MovieMapper;
+import com.video.store.domain.entity.Movie;
+import com.video.store.exception.MovieException;
+import com.video.store.exception.NotFoundException;
+import com.video.store.infrastructure.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.Optional;
 
-import static com.video.store.videostore.domain.enumerator.Error.MOVIE_ALREADY_EXISTS;
-import static com.video.store.videostore.domain.enumerator.Error.MOVIE_NOT_FOUND;
+import static com.video.store.domain.enumerator.Error.MOVIE_ALREADY_EXISTS;
+import static com.video.store.domain.enumerator.Error.MOVIE_NOT_FOUND;
 
 @Slf4j
 @Service

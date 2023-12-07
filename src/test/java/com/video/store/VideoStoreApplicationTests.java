@@ -1,4 +1,4 @@
-package com.video.store.videostore;
+package com.video.store;
 
 import org.junit.jupiter.api.Test;
 import org.springframework.boot.test.context.SpringBootTest;

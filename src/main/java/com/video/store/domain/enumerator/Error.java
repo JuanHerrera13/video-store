@@ -1,4 +1,4 @@
-package com.video.store.videostore.domain.enumerator;
+package com.video.store.domain.enumerator;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
