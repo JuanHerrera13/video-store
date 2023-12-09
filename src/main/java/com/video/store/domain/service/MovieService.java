@@ -3,7 +3,7 @@ package com.video.store.domain.service;
 import com.video.store.api.dto.MovieDto;
 import com.video.store.api.mapping.MovieMapper;
 import com.video.store.domain.entity.Movie;
-import com.video.store.exception.MovieException;
+import com.video.store.exception.MovieAlreadyExistsException;
 import com.video.store.exception.NotFoundException;
 import com.video.store.infrastructure.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -37,7 +37,7 @@ public class MovieService {
         final Optional<Movie> validatingMovie = this.movieRepository.findTopByTitle(movieDto.getTitle());
         if (validatingMovie.isPresent()) {
             log.error("Movie already exists in db");
-            throw new MovieException(MOVIE_ALREADY_EXISTS.getErrorDescription());
+            throw new MovieAlreadyExistsException(MOVIE_ALREADY_EXISTS.getErrorDescription());
         }
         final Movie movie = this.movieMapper.movieDtoToMovie(movieDto);
         log.info("Adding movie to db");
