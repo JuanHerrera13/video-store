@@ -1,5 +1,6 @@
 package com.video.store.domain.service;
 
+import com.video.store.api.dto.MovieCreationDto;
 import com.video.store.api.dto.MovieDto;
 import com.video.store.api.mapping.MovieMapper;
 import com.video.store.domain.entity.Movie;
@@ -24,33 +25,36 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final MovieMapper movieMapper;
 
-    public MovieDto findMovieById(String id) {
-        final Movie movie = this.movieRepository.findById(id).orElseThrow(() ->
-                new NotFoundException(MOVIE_NOT_FOUND.getErrorDescription()));
-        return this.movieMapper.movieToMovieDto(movie);
-    }
-
     public MovieDto findMovieByTitle(String title) {
         final Movie movie = this.movieRepository.findTopByTitleIgnoreCase(title).orElseThrow(() ->
                 new NotFoundException(MOVIE_NOT_FOUND.getErrorDescription()));
+        log.info("Movie found");
         return this.movieMapper.movieToMovieDto(movie);
     }
 
-    public MovieDto addMovie(MovieDto movieDto) {
-        final Optional<Movie> validatingMovie = this.movieRepository.findTopByTitleIgnoreCase(movieDto.getTitle());
+    public List<MovieDto> fetchMoviesList() {
+        final List<Movie> movies = this.movieRepository.findAll();
+        log.info("Fetching all movies in db");
+        return this.movieMapper.movieListToMovieDtoList(movies);
+    }
+
+    public MovieDto addMovie(MovieCreationDto movieCreationDto) {
+        final Optional<Movie> validatingMovie = this.movieRepository.findTopByTitleIgnoreCase(movieCreationDto.getTitle());
         if (validatingMovie.isPresent()) {
             log.error("Movie already exists in db");
             throw new MovieAlreadyExistsException(MOVIE_ALREADY_EXISTS.getErrorDescription());
         }
-        final Movie movie = this.movieMapper.movieDtoToMovie(movieDto);
+        final Movie movie = this.movieMapper.movieCreationDtoToMovie(movieCreationDto);
         log.info("Adding movie to db");
         this.movieRepository.save(movie);
         log.info("Movie added to db");
         return this.movieMapper.movieToMovieDto(movie);
     }
 
-    public List<MovieDto> fetchMoviesList() {
-        final List<Movie> movies = this.movieRepository.findAll();
-        return this.movieMapper.movieListToMovieDtoList(movies);
+    public void deleteMovie(String title) {
+        final MovieDto movieDto = findMovieByTitle(title);
+        final Movie movie = this.movieMapper.movieDtoToMovie(movieDto);
+        this.movieRepository.delete(movie);
+        log.info("Movie deleted");
     }
 }

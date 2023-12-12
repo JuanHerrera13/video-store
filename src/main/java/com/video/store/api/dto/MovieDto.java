@@ -7,29 +7,29 @@ import lombok.Data;
 
 import java.util.Date;
 import java.util.List;
-import java.util.UUID;
 
 @Data
 public class MovieDto {
 
-    private String id = UUID.randomUUID().toString();
+    @NotBlank
+    private String id;
 
     @NotBlank
     private String title;
 
-    private String description;
-
-    private String director;
-
     @NotNull
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date releaseDate;
-
-    private List<String> cast;
 
     @NotNull
     private boolean available;
 
     @NotNull
     private Integer numberOfCopies;
+
+    private String director;
+
+    private List<String> cast;
+
+    private String description;
 }
