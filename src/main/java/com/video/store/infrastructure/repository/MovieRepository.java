@@ -9,5 +9,5 @@ import java.util.Optional;
 @Repository
 public interface MovieRepository extends MongoRepository<Movie, String> {
 
-    Optional<Movie> findTopByTitle(String title);
+    Optional<Movie> findTopByTitleIgnoreCase(String title);
 }

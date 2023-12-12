@@ -10,6 +10,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.List;
 import java.util.Optional;
 
 import static com.video.store.domain.enumerator.Error.MOVIE_ALREADY_EXISTS;
@@ -23,18 +24,20 @@ public class MovieService {
     private final MovieRepository movieRepository;
     private final MovieMapper movieMapper;
 
-    public Movie findMovieById(String id) {
-        return this.movieRepository.findById(id).orElseThrow(() ->
+    public MovieDto findMovieById(String id) {
+        final Movie movie = this.movieRepository.findById(id).orElseThrow(() ->
                 new NotFoundException(MOVIE_NOT_FOUND.getErrorDescription()));
+        return this.movieMapper.movieToMovieDto(movie);
     }
 
-    public Movie findMovieByTitle(String title) {
-        return this.movieRepository.findTopByTitle(title).orElseThrow(() ->
+    public MovieDto findMovieByTitle(String title) {
+        final Movie movie = this.movieRepository.findTopByTitleIgnoreCase(title).orElseThrow(() ->
                 new NotFoundException(MOVIE_NOT_FOUND.getErrorDescription()));
+        return this.movieMapper.movieToMovieDto(movie);
     }
 
     public MovieDto addMovie(MovieDto movieDto) {
-        final Optional<Movie> validatingMovie = this.movieRepository.findTopByTitle(movieDto.getTitle());
+        final Optional<Movie> validatingMovie = this.movieRepository.findTopByTitleIgnoreCase(movieDto.getTitle());
         if (validatingMovie.isPresent()) {
             log.error("Movie already exists in db");
             throw new MovieAlreadyExistsException(MOVIE_ALREADY_EXISTS.getErrorDescription());
@@ -44,5 +47,10 @@ public class MovieService {
         this.movieRepository.save(movie);
         log.info("Movie added to db");
         return this.movieMapper.movieToMovieDto(movie);
+    }
+
+    public List<MovieDto> fetchMoviesList() {
+        final List<Movie> movies = this.movieRepository.findAll();
+        return this.movieMapper.movieListToMovieDtoList(movies);
     }
 }
