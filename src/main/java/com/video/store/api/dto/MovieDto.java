@@ -31,5 +31,5 @@ public class MovieDto {
 
     private List<String> cast;
 
-    private String description;
+    private String synopsis;
 }

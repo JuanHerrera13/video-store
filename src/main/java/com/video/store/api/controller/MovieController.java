@@ -3,6 +3,7 @@ package com.video.store.api.controller;
 import com.video.store.api.dto.MovieCreationDto;
 import com.video.store.api.dto.MovieDeleteDto;
 import com.video.store.api.dto.MovieDto;
+import com.video.store.api.dto.MovieUpdateDto;
 import com.video.store.domain.service.MovieService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -36,6 +37,12 @@ public class MovieController {
     @ResponseStatus(HttpStatus.CREATED)
     public MovieDto addMovie(@Valid @RequestBody MovieCreationDto movieCreationDto) {
         return this.movieService.addMovie(movieCreationDto);
+    }
+
+    @PutMapping("/movies.update")
+    @ResponseStatus(HttpStatus.OK)
+    public MovieDto updateMovie(@Valid @RequestBody MovieUpdateDto movieUpdateDto) {
+        return this.movieService.updateMovie(movieUpdateDto);
     }
 
     @DeleteMapping("/movies.delete")
