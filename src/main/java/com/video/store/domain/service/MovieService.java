@@ -5,6 +5,7 @@ import com.video.store.api.dto.MovieDto;
 import com.video.store.api.dto.MovieUpdateDto;
 import com.video.store.api.mapping.MovieMapper;
 import com.video.store.domain.entity.Movie;
+import com.video.store.exception.DirectorException;
 import com.video.store.exception.MovieAlreadyExistsException;
 import com.video.store.exception.NotFoundException;
 import com.video.store.infrastructure.repository.MovieRepository;
@@ -17,8 +18,7 @@ import java.util.Objects;
 import java.util.Optional;
 import java.util.function.Consumer;
 
-import static com.video.store.domain.enumerator.Error.MOVIE_ALREADY_EXISTS;
-import static com.video.store.domain.enumerator.Error.MOVIE_NOT_FOUND;
+import static com.video.store.domain.enumerator.Error.*;
 
 @Slf4j
 @Service
@@ -40,6 +40,20 @@ public class MovieService {
                 new NotFoundException(MOVIE_NOT_FOUND.getErrorDescription()));
         log.info("Movie found");
         return this.movieMapper.movieToMovieDto(movie);
+    }
+
+    /**
+     * Fetch all movies from a given director
+     *
+     * @param director director's name
+     * @return a list of movies from the given director
+     */
+    public List<MovieDto> findMoviesByDirector(String director) {
+        final List<Movie> movies = this.movieRepository.findAllByDirectorIgnoreCase(director);
+        if (movies.isEmpty()) {
+            throw new DirectorException(DIRECTOR_HAS_NO_MOVIES.getErrorDescription());
+        }
+        return this.movieMapper.movieListToMovieDtoList(movies);
     }
 
     /**

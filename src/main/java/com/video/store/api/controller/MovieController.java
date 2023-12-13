@@ -33,6 +33,12 @@ public class MovieController {
         return this.movieService.findMovieByTitle(title);
     }
 
+    @GetMapping("/movies/")
+    @ResponseStatus(HttpStatus.OK)
+    public List<MovieDto> fetchMoviesByDirector(@RequestParam(value = "director") String director) {
+        return this.movieService.findMoviesByDirector(director);
+    }
+
     @PostMapping("/movies.add")
     @ResponseStatus(HttpStatus.CREATED)
     public MovieDto addMovie(@Valid @RequestBody MovieCreationDto movieCreationDto) {
