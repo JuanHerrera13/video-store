@@ -5,7 +5,6 @@ import com.video.store.api.dto.MovieDto;
 import com.video.store.api.dto.MovieUpdateDto;
 import com.video.store.api.mapping.MovieMapper;
 import com.video.store.domain.entity.Movie;
-import com.video.store.exception.DirectorException;
 import com.video.store.exception.MovieAlreadyExistsException;
 import com.video.store.exception.NotFoundException;
 import com.video.store.infrastructure.repository.MovieRepository;
@@ -42,6 +41,15 @@ public class MovieService {
         return this.movieMapper.movieToMovieDto(movie);
     }
 
+    public List<MovieDto> findMoviesByDirectorAndGenres(String director, List<String> genres) {
+        final List<Movie> movies = this.movieRepository.findAllByDirectorIgnoreCaseAndGenresInIgnoreCase(director, genres);
+        if (movies.isEmpty()) {
+            throw new NotFoundException(DIRECTOR_AND_GENRE_HAVE_NO_MOVIES.getErrorDescription());
+        }
+        log.info("Fetching director's and genre's movies list");
+        return this.movieMapper.movieListToMovieDtoList(movies);
+    }
+
     /**
      * Fetch all movies from a given director
      *
@@ -51,8 +59,24 @@ public class MovieService {
     public List<MovieDto> findMoviesByDirector(String director) {
         final List<Movie> movies = this.movieRepository.findAllByDirectorIgnoreCase(director);
         if (movies.isEmpty()) {
-            throw new DirectorException(DIRECTOR_HAS_NO_MOVIES.getErrorDescription());
+            throw new NotFoundException(DIRECTOR_HAS_NO_MOVIES.getErrorDescription());
         }
+        log.info("Fetching director's movies list");
+        return this.movieMapper.movieListToMovieDtoList(movies);
+    }
+
+    /**
+     * Fetch all movies with the passed genres
+     *
+     * @param genres movie's genres
+     * @return a list of movies with the given genres
+     */
+    public List<MovieDto> findMoviesByGenre(List<String> genres) {
+        final List<Movie> movies = this.movieRepository.findByGenresInIgnoreCase(genres);
+        if (movies.isEmpty()) {
+            throw new NotFoundException(GENRE_HAS_NO_MOVIES.getErrorDescription());
+        }
+        log.info("Fetching the films list of the given genre");
         return this.movieMapper.movieListToMovieDtoList(movies);
     }
 
@@ -102,6 +126,7 @@ public class MovieService {
         updateIfNonNull(movieUpdateDto.getSynopsis(), updatedMovie::setSynopsis);
         updateIfNonNull(movieUpdateDto.getReleaseDate(), updatedMovie::setReleaseDate);
         updateIfNonNull(movieUpdateDto.getNumberOfCopies(), updatedMovie::setNumberOfCopies);
+        updateIfNonNull(movieUpdateDto.getGenres(), updatedMovie::setGenres);
         this.movieRepository.save(updatedMovie);
         log.info("Movie updated");
         return this.movieMapper.movieToMovieDto(updatedMovie);

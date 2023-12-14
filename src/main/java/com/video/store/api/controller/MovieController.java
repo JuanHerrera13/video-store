@@ -12,31 +12,35 @@ import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Objects;
 
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/video-store")
+@RequestMapping("/video-store/v1")
 public class MovieController {
 
     private final MovieService movieService;
 
     @GetMapping("/movies")
     @ResponseStatus(HttpStatus.OK)
-    public List<MovieDto> fetchMovies() {
-        return this.movieService.fetchMoviesList();
+    public List<MovieDto> fetchMovies(@RequestParam(required = false) String director,
+                                      @RequestParam(required = false) List<String> genres) {
+        if (Objects.nonNull(director) && Objects.nonNull(genres)) {
+            return this.movieService.findMoviesByDirectorAndGenres(director, genres);
+        } else if (Objects.nonNull(director)) {
+            return this.movieService.findMoviesByDirector(director);
+        } else if (Objects.nonNull(genres)) {
+            return this.movieService.findMoviesByGenre(genres);
+        } else {
+            return this.movieService.fetchMoviesList();
+        }
     }
 
     @GetMapping("/movies/{title}")
     @ResponseStatus(HttpStatus.OK)
     public MovieDto fetchMovieByTitle(@PathVariable String title) {
         return this.movieService.findMovieByTitle(title);
-    }
-
-    @GetMapping("/movies/")
-    @ResponseStatus(HttpStatus.OK)
-    public List<MovieDto> fetchMoviesByDirector(@RequestParam(value = "director") String director) {
-        return this.movieService.findMoviesByDirector(director);
     }
 
     @PostMapping("/movies.add")

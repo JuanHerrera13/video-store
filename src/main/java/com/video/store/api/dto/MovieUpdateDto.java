@@ -16,6 +16,8 @@ public class MovieUpdateDto {
     @JsonFormat(pattern = "yyyy-MM-dd")
     private Date releaseDate;
 
+    private List<String> genres;
+
     private Integer numberOfCopies;
 
     private String director;
