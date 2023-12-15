@@ -1,6 +1,7 @@
 package com.video.store.exception.handler;
 
-import com.video.store.exception.MovieAlreadyExistsException;
+import com.video.store.exception.CustomerException;
+import com.video.store.exception.MovieException;
 import com.video.store.exception.NotFoundException;
 import com.video.store.exception.dto.ErrorResponse;
 import org.springframework.http.HttpStatus;
@@ -15,7 +16,8 @@ import java.time.Instant;
 public class ExceptionHandler {
 
     @org.springframework.web.bind.annotation.ExceptionHandler({
-            MovieAlreadyExistsException.class,
+            MovieException.class,
+            CustomerException.class,
             MethodArgumentNotValidException.class,
             HttpMessageNotReadableException.class
     })

@@ -1,4 +1,4 @@
-package com.video.store.api.dto;
+package com.video.store.api.dto.movie;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.NotBlank;

@@ -1,11 +1,11 @@
 package com.video.store.domain.service;
 
-import com.video.store.api.dto.MovieCreationDto;
-import com.video.store.api.dto.MovieDto;
-import com.video.store.api.dto.MovieUpdateDto;
+import com.video.store.api.dto.movie.MovieCreationDto;
+import com.video.store.api.dto.movie.MovieDto;
+import com.video.store.api.dto.movie.MovieUpdateDto;
 import com.video.store.api.mapping.MovieMapper;
 import com.video.store.domain.entity.Movie;
-import com.video.store.exception.MovieAlreadyExistsException;
+import com.video.store.exception.MovieException;
 import com.video.store.exception.NotFoundException;
 import com.video.store.infrastructure.repository.MovieRepository;
 import lombok.RequiredArgsConstructor;
@@ -13,11 +13,10 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Objects;
 import java.util.Optional;
-import java.util.function.Consumer;
 
 import static com.video.store.domain.enumerator.Error.*;
+import static com.video.store.domain.service.utils.ServiceUtils.updateIfNonNull;
 
 @Slf4j
 @Service
@@ -41,6 +40,13 @@ public class MovieService {
         return this.movieMapper.movieToMovieDto(movie);
     }
 
+    /**
+     * Fetch all films that match with the director and genres
+     *
+     * @param director director's name
+     * @param genres   genres list
+     * @return a list of movies that match with both genre and director
+     */
     public List<MovieDto> findMoviesByDirectorAndGenres(String director, List<String> genres) {
         final List<Movie> movies = this.movieRepository.findAllByDirectorIgnoreCaseAndGenresInIgnoreCase(director, genres);
         if (movies.isEmpty()) {
@@ -87,6 +93,9 @@ public class MovieService {
      */
     public List<MovieDto> fetchMoviesList() {
         final List<Movie> movies = this.movieRepository.findAll();
+        if (movies.isEmpty()) {
+            throw new NotFoundException(NO_MOVIES_FOUND.getErrorDescription());
+        }
         log.info("Fetching all movies in db");
         return this.movieMapper.movieListToMovieDtoList(movies);
     }
@@ -96,19 +105,19 @@ public class MovieService {
      *
      * @param movieCreationDto movie creation data transfer object
      * @return an added movie data transfer object
-     * @throws MovieAlreadyExistsException when is given a title movie that already exists
+     * @throws MovieException when is given a title movie that already exists
      */
     public MovieDto addMovie(MovieCreationDto movieCreationDto) {
         final Optional<Movie> validatingMovie = this.movieRepository.findTopByTitleIgnoreCase(
                 movieCreationDto.getTitle());
         if (validatingMovie.isPresent()) {
             log.error("Movie already exists in db");
-            throw new MovieAlreadyExistsException(MOVIE_ALREADY_EXISTS.getErrorDescription());
+            throw new MovieException(MOVIE_ALREADY_EXISTS.getErrorDescription());
         }
         final Movie movie = this.movieMapper.movieCreationDtoToMovie(movieCreationDto);
         log.info("Adding movie to db");
         this.movieRepository.save(movie);
-        log.info("Movie added to db");
+        log.info("Movie added");
         return this.movieMapper.movieToMovieDto(movie);
     }
 
@@ -127,6 +136,7 @@ public class MovieService {
         updateIfNonNull(movieUpdateDto.getReleaseDate(), updatedMovie::setReleaseDate);
         updateIfNonNull(movieUpdateDto.getNumberOfCopies(), updatedMovie::setNumberOfCopies);
         updateIfNonNull(movieUpdateDto.getGenres(), updatedMovie::setGenres);
+        log.info("Updating movie in db");
         this.movieRepository.save(updatedMovie);
         log.info("Movie updated");
         return this.movieMapper.movieToMovieDto(updatedMovie);
@@ -140,21 +150,8 @@ public class MovieService {
     public void deleteMovie(String title) {
         final MovieDto movieDto = findMovieByTitle(title);
         final Movie movie = this.movieMapper.movieDtoToMovie(movieDto);
+        log.info("Deleting moving in db");
         this.movieRepository.delete(movie);
         log.info("Movie deleted");
-    }
-
-    /**
-     * Method used to check if newValue is null and if so,
-     * update old value to new
-     *
-     * @param newValue newValue
-     * @param setter   setter
-     * @param <T>      value's type
-     */
-    private <T> void updateIfNonNull(T newValue, Consumer<T> setter) {
-        if (Objects.nonNull(newValue)) {
-            setter.accept(newValue);
-        }
     }
 }

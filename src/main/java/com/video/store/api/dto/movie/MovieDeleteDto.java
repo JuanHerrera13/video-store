@@ -1,4 +1,4 @@
-package com.video.store.api.dto;
+package com.video.store.api.dto.movie;
 
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;

@@ -1,9 +1,9 @@
 package com.video.store.api.controller;
 
-import com.video.store.api.dto.MovieCreationDto;
-import com.video.store.api.dto.MovieDeleteDto;
-import com.video.store.api.dto.MovieDto;
-import com.video.store.api.dto.MovieUpdateDto;
+import com.video.store.api.dto.movie.MovieCreationDto;
+import com.video.store.api.dto.movie.MovieDeleteDto;
+import com.video.store.api.dto.movie.MovieDto;
+import com.video.store.api.dto.movie.MovieUpdateDto;
 import com.video.store.domain.service.MovieService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -17,14 +17,13 @@ import java.util.Objects;
 @Validated
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/video-store/v1")
-public class MovieController {
+public class MovieController extends RootController {
 
     private final MovieService movieService;
 
     @GetMapping("/movies")
     @ResponseStatus(HttpStatus.OK)
-    public List<MovieDto> fetchMovies(@RequestParam(required = false) String director,
+    public List<MovieDto> fetchMovies(@Valid @RequestParam(required = false) String director,
                                       @RequestParam(required = false) List<String> genres) {
         if (Objects.nonNull(director) && Objects.nonNull(genres)) {
             return this.movieService.findMoviesByDirectorAndGenres(director, genres);
