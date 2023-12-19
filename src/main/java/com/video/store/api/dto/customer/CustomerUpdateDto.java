@@ -1,7 +1,10 @@
 package com.video.store.api.dto.customer;
 
+import com.video.store.domain.entity.Movie;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class CustomerUpdateDto {
@@ -15,7 +18,9 @@ public class CustomerUpdateDto {
 
     private String phoneNumber;
 
-    private Integer rentedMovies;
+    private Integer availableMoviesCount;
 
     private Boolean ableToRent;
+
+    private List<Movie> rentedMovies;
 }

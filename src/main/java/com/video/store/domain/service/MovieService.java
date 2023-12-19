@@ -24,7 +24,19 @@ import static com.video.store.domain.service.utils.ServiceUtils.updateIfNonNull;
 public class MovieService {
 
     private final MovieRepository movieRepository;
+
     private final MovieMapper movieMapper;
+
+    /**
+     * Find a movie by its id
+     *
+     * @param id movie id
+     * @return a movie
+     */
+    public Movie findMovieById(String id) {
+        return this.movieRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(MOVIE_NOT_FOUND.getErrorDescription()));
+    }
 
     /**
      * Find a movie by its title

@@ -17,9 +17,15 @@ public enum Error {
     DIRECTOR_AND_GENRE_HAVE_NO_MOVIES("DIRECTOR_AND_GENRE_HAVE_NO_MOVIES", "No film found for " +
             "the given director and genre"),
 
-    // ALREADY EXISTS EXCEPTION MESSAGES,
+    // ALREADY EXISTS EXCEPTION MESSAGES
     MOVIE_ALREADY_EXISTS("MOVIE_ALREADY_EXISTS", "Movie already exists"),
-    CUSTOMER_ALREADY_EXISTS("CUSTOMER_ALREADY_EXISTS", "Customer already exists");
+    CUSTOMER_ALREADY_EXISTS("CUSTOMER_ALREADY_EXISTS", "Customer already exists"),
+
+    // RENTAL EXCEPTIONS
+    CUSTOMER_CANNOT_RENT("CUSTOMER_CANNOT_RENT", "Customer can not rent. " +
+            "Rented movies availability exceeded"),
+    MOVIE_CANNOT_BE_RENTED("MOVIE_CANNOT_BE_RENTED", "Movie can not be rented. There are no " +
+            "more copies available in this moment");
 
     private final String errorMessage;
     private final String errorDescription;

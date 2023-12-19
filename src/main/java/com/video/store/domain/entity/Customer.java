@@ -7,6 +7,7 @@ import lombok.Data;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+import java.util.List;
 import java.util.UUID;
 
 @Data
@@ -29,8 +30,10 @@ public class Customer {
     private String phoneNumber;
 
     @NotNull
-    private Integer rentedMovies;
+    private Integer availableMoviesCount;
 
     @NotNull
     private Boolean ableToRent;
+
+    private List<Movie> rentedMovies;
 }

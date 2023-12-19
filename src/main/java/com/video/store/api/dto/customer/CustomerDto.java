@@ -1,10 +1,13 @@
 package com.video.store.api.dto.customer;
 
+import com.video.store.domain.entity.Movie;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Pattern;
 import lombok.Data;
 import org.springframework.data.annotation.Id;
+
+import java.util.List;
 
 @Data
 public class CustomerDto {
@@ -25,8 +28,10 @@ public class CustomerDto {
     private String phoneNumber;
 
     @NotNull
-    private Integer rentedMovies;
+    private Integer availableMoviesCount;
 
     @NotNull
     private Boolean ableToRent;
+
+    private List<Movie> rentedMovies;
 }

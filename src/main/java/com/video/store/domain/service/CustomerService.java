@@ -13,6 +13,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,7 +26,19 @@ import static com.video.store.domain.service.utils.ServiceUtils.updateIfNonNull;
 public class CustomerService {
 
     private final CustomerRepository customerRepository;
+
     private final CustomerMapper customerMapper;
+
+    /**
+     * Find a customer by id
+     *
+     * @param id customer id
+     * @return a customer
+     */
+    public Customer findCustomerById(String id) {
+        return this.customerRepository.findById(id).orElseThrow(() ->
+                new NotFoundException(CUSTOMER_NOT_FOUND.getErrorDescription()));
+    }
 
     /**
      * Fetch all customers available in the db
@@ -72,7 +85,8 @@ public class CustomerService {
         }
         final Customer customer = this.customerMapper.customerCreationDtoToCustomer(customerCreationDto);
         customer.setAbleToRent(Boolean.TRUE);
-        customer.setRentedMovies(0);
+        customer.setAvailableMoviesCount(5);
+        customer.setRentedMovies(new ArrayList<>());
         log.info("Adding customer to db");
         this.customerRepository.save(customer);
         log.info("Customer added in db");
@@ -91,8 +105,9 @@ public class CustomerService {
         updateIfNonNull(customerUpdateDto.getFirstName(), updatedCustomer::setFirstName);
         updateIfNonNull(customerUpdateDto.getLastName(), updatedCustomer::setLastName);
         updateIfNonNull(customerUpdateDto.getPhoneNumber(), updatedCustomer::setPhoneNumber);
-        updateIfNonNull(customerUpdateDto.getRentedMovies(), updatedCustomer::setRentedMovies);
+        updateIfNonNull(customerUpdateDto.getAvailableMoviesCount(), updatedCustomer::setAvailableMoviesCount);
         updateIfNonNull(customerUpdateDto.getAbleToRent(), updatedCustomer::setAbleToRent);
+        updateIfNonNull(customerUpdateDto.getRentedMovies(), updatedCustomer::setRentedMovies);
         log.info("Updating customer in db");
         this.customerRepository.save(updatedCustomer);
         log.info("Customer updated");
