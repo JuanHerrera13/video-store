@@ -13,8 +13,9 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import static com.video.store.domain.enumerator.Error.CUSTOMER_CANNOT_RENT;
-import static com.video.store.domain.enumerator.Error.MOVIE_CANNOT_BE_RENTED;
+import java.util.List;
+
+import static com.video.store.domain.enumerator.Error.*;
 
 @Slf4j
 @Service
@@ -39,20 +40,26 @@ public class RentalService {
      */
     public CustomerDto movieRental(MovieRentalDto movieRentalDto) {
         final Customer customer = this.customerService.findCustomerById(movieRentalDto.getCustomerId());
-        final Movie movie = this.movieService.findMovieById(movieRentalDto.getMovieId());
+        final List<Movie> movieList = this.movieService.findMoviesById(movieRentalDto.getMoviesIds());
         if (!customer.getAbleToRent()) {
             throw new CustomerException(CUSTOMER_CANNOT_RENT.getErrorDescription());
-        } else if (movie.getNumberOfCopies() < 1) {
-            throw new MovieException(MOVIE_CANNOT_BE_RENTED.getErrorDescription());
         }
-        customer.getRentedMovies().add(movie);
-        customer.setAvailableMoviesCount(customer.getAvailableMoviesCount() - 1);
-        if (customer.getRentedMovies().size() >= 5) {
-            customer.setAbleToRent(false);
+        for (Movie movie : movieList) {
+            if (movie.getNumberOfCopies() < 1) {
+                throw new MovieException(MOVIE_CANNOT_BE_RENTED.getErrorDescription());
+            } else if (customer.getRentedMovies().contains(movie)) {
+                log.error("Customer has already rented the film with id " + movie.getId());
+                throw new CustomerException(CUSTOMER_HAS_ALREADY_RENTED_THE_FILM.getErrorDescription());
+            }
+            customer.getRentedMovies().add(movie);
+            customer.setAvailableMoviesCount(customer.getAvailableMoviesCount() - 1);
+            if (customer.getRentedMovies().size() >= 5) {
+                customer.setAbleToRent(false);
+            }
+            movie.setNumberOfCopies(movie.getNumberOfCopies() - 1);
+            customerRepository.save(customer);
+            movieRepository.save(movie);
         }
-        movie.setNumberOfCopies(movie.getNumberOfCopies() - 1);
-        customerRepository.save(customer);
-        movieRepository.save(movie);
         return this.customerMapper.customerToCustomerDto(customer);
     }
 }

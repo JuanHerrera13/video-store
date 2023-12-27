@@ -1,7 +1,10 @@
 package com.video.store.api.dto.movie;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
+
+import java.util.List;
 
 @Data
 public class MovieRentalDto {
@@ -9,6 +12,6 @@ public class MovieRentalDto {
     @NotBlank
     private String customerId;
 
-    @NotBlank
-    private String movieId;
+    @NotNull
+    private List<String> moviesIds;
 }

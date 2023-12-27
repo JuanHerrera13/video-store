@@ -32,10 +32,26 @@ public class MovieService {
      *
      * @param id movie id
      * @return a movie
+     * @throws NotFoundException when the given id doesn't match with any movie present in db
      */
     public Movie findMovieById(String id) {
         return this.movieRepository.findById(id).orElseThrow(() ->
                 new NotFoundException(MOVIE_NOT_FOUND.getErrorDescription()));
+    }
+
+    /**
+     * Fetch a movie list with the given ids
+     *
+     * @param moviesIds a list of movies ids
+     * @return a list of movies
+     * @throws NotFoundException when the given ids list doesn't match with any movie present in db
+     */
+    public List<Movie> findMoviesById(List<String> moviesIds) {
+        final List<Movie> moviesList = this.movieRepository.findAllById(moviesIds);
+        if (moviesList.isEmpty()) {
+            throw new NotFoundException(MOVIES_NOT_FOUND.getErrorDescription());
+        }
+        return moviesList;
     }
 
     /**

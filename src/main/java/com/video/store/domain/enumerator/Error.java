@@ -9,6 +9,7 @@ public enum Error {
 
     // NOT FOUND MESSAGES
     MOVIE_NOT_FOUND("MOVIE_NOT_FOUND", "Movie not found"),
+    MOVIES_NOT_FOUND("MOVIES_NOT_FOUND", "No movie was found"),
     NO_MOVIES_FOUND("NO_MOVIES_FOUND", "No movies were found"),
     CUSTOMER_NOT_FOUND("CUSTOMER_NOT_FOUND", "Customer not found"),
     NO_CUSTOMERS_FOUND("NO_CUSTOMERS_FOUND", "No customers were found"),
@@ -25,7 +26,9 @@ public enum Error {
     CUSTOMER_CANNOT_RENT("CUSTOMER_CANNOT_RENT", "Customer can not rent. " +
             "Rented movies availability exceeded"),
     MOVIE_CANNOT_BE_RENTED("MOVIE_CANNOT_BE_RENTED", "Movie can not be rented. There are no " +
-            "more copies available in this moment");
+            "more copies available in this moment"),
+    CUSTOMER_HAS_ALREADY_RENTED_THE_FILM("CUSTOMER_HAS_ALREADY_RENTED_THE_FILM", "Customer" +
+            " has already rented the given film");
 
     private final String errorMessage;
     private final String errorDescription;

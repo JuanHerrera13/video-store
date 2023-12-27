@@ -27,7 +27,7 @@ public class MovieDto {
     @NotNull
     private Integer numberOfCopies;
 
-    @NotBlank
+    @NotNull
     private List<String> genres;
 
     private String director;
