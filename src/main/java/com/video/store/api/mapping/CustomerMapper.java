@@ -11,12 +11,27 @@ import java.util.List;
 @Mapper
 public interface CustomerMapper {
 
+    @Mapping(source = "firstName", target = "firstName")
+    @Mapping(source = "lastName", target = "lastName")
+    @Mapping(source = "ssn", target = "ssn")
+    @Mapping(source = "phoneNumber", target = "phoneNumber")
+    @Mapping(source = "availableMoviesCount", target = "availableMoviesCount")
+    @Mapping(source = "ableToRent", target = "ableToRent")
     Customer customerDtoToCustomer(CustomerDto customerDto);
 
     @Mapping(source = "firstName", target = "firstName")
+    @Mapping(source = "lastName", target = "lastName")
+    @Mapping(source = "ssn", target = "ssn")
+    @Mapping(source = "phoneNumber", target = "phoneNumber")
+    @Mapping(source = "availableMoviesCount", target = "availableMoviesCount")
+    @Mapping(source = "ableToRent", target = "ableToRent")
     CustomerDto customerToCustomerDto(Customer customer);
 
-    List<CustomerDto> customerListToCustomerListDto(List<Customer> customers);
-
+    @Mapping(source = "firstName", target = "firstName")
+    @Mapping(source = "lastName", target = "lastName")
+    @Mapping(source = "ssn", target = "ssn")
+    @Mapping(source = "phoneNumber", target = "phoneNumber")
     Customer customerCreationDtoToCustomer(CustomerCreationDto customerCreationDto);
+
+    List<CustomerDto> customerListToCustomerListDto(List<Customer> customers);
 }
