@@ -2,6 +2,7 @@ package com.video.store.api.controller;
 
 import com.video.store.api.dto.customer.CustomerDto;
 import com.video.store.api.dto.movie.MovieRentalDto;
+import com.video.store.api.dto.movie.MovieReturnDto;
 import com.video.store.domain.service.RentalService;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -23,5 +24,11 @@ public class RentalController extends RootController {
     @ResponseStatus(HttpStatus.OK)
     public CustomerDto rentMovie(@Valid @RequestBody MovieRentalDto movieRentalDto) {
         return this.rentalService.movieRental(movieRentalDto);
+    }
+
+    @PostMapping("/movies-return")
+    @ResponseStatus(HttpStatus.OK)
+    public CustomerDto returnMovie(@Valid @RequestBody MovieReturnDto movieReturnDto) {
+        return this.rentalService.movieReturn(movieReturnDto);
     }
 }

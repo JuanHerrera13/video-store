@@ -27,8 +27,12 @@ public enum Error {
             "Rented movies availability exceeded"),
     MOVIE_CANNOT_BE_RENTED("MOVIE_CANNOT_BE_RENTED", "Movie can not be rented. There are no " +
             "more copies available in this moment"),
-    CUSTOMER_HAS_ALREADY_RENTED_THE_FILM("CUSTOMER_HAS_ALREADY_RENTED_THE_FILM", "Customer" +
-            " has already rented the given film");
+    CUSTOMER_HAS_ALREADY_RENTED_THIS_FILM("CUSTOMER_HAS_ALREADY_RENTED_THE_FILM", "Customer" +
+            " has already rented the given film"),
+
+    // RETURN MOVIE EXCEPTION
+    CUSTOMER_DID_NOT_RENT_THIS_MOVIE("CUSTOMER_DID_NOT_RENT_THIS_MOVIE", "Customer didn't " +
+            "rent the given film");
 
     private final String errorMessage;
     private final String errorDescription;
