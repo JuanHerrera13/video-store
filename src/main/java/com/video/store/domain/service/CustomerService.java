@@ -66,7 +66,7 @@ public class CustomerService {
         final Customer customer = this.customerRepository
                 .findByFirstNameIgnoreCaseAndLastNameIgnoreCase(firstName, lastName)
                 .orElseThrow(() -> new NotFoundException(CUSTOMER_NOT_FOUND.getErrorDescription()));
-        log.info("Retrieving customer");
+        log.info("Retrieving customer with first name '" + firstName + "' and last name '" + lastName + "'");
         return this.customerMapper.customerToCustomerDto(customer);
     }
 
@@ -80,7 +80,8 @@ public class CustomerService {
     public CustomerDto addCustomer(CustomerCreationDto customerCreationDto) {
         final Optional<Customer> validatingCustomer = this.customerRepository.findBySsn(customerCreationDto.getSsn());
         if (validatingCustomer.isPresent()) {
-            log.info("Customer already exists");
+            log.error("Customer " + customerCreationDto.getFirstName() + " " + customerCreationDto.getLastName() +
+                    " already exists in db");
             throw new CustomerException(CUSTOMER_ALREADY_EXISTS.getErrorDescription());
         }
         final Customer customer = this.customerMapper.customerCreationDtoToCustomer(customerCreationDto);

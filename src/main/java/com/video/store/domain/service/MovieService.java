@@ -49,8 +49,10 @@ public class MovieService {
     public List<Movie> findMoviesById(List<String> moviesIds) {
         final List<Movie> moviesList = this.movieRepository.findAllById(moviesIds);
         if (moviesList.isEmpty()) {
+            log.error("No movies were found");
             throw new NotFoundException(MOVIES_NOT_FOUND.getErrorDescription());
         }
+        log.info("Fetching movies list");
         return moviesList;
     }
 
@@ -64,7 +66,7 @@ public class MovieService {
     public MovieDto findMovieByTitle(String title) {
         final Movie movie = this.movieRepository.findTopByTitleIgnoreCase(title).orElseThrow(() ->
                 new NotFoundException(MOVIE_NOT_FOUND.getErrorDescription()));
-        log.info("Movie found");
+        log.info("Movie" + title + " found");
         return this.movieMapper.movieToMovieDto(movie);
     }
 
@@ -93,6 +95,7 @@ public class MovieService {
     public List<MovieDto> findMoviesByDirector(String director) {
         final List<Movie> movies = this.movieRepository.findAllByDirectorIgnoreCase(director);
         if (movies.isEmpty()) {
+            log.error("No movie was found for director " + director);
             throw new NotFoundException(DIRECTOR_HAS_NO_MOVIES.getErrorDescription());
         }
         log.info("Fetching director's movies list");
@@ -108,6 +111,7 @@ public class MovieService {
     public List<MovieDto> findMoviesByGenre(List<String> genres) {
         final List<Movie> movies = this.movieRepository.findByGenresInIgnoreCase(genres);
         if (movies.isEmpty()) {
+            log.error("There are no movies for the given genres");
             throw new NotFoundException(GENRE_HAS_NO_MOVIES.getErrorDescription());
         }
         log.info("Fetching the films list of the given genre");
@@ -122,6 +126,7 @@ public class MovieService {
     public List<MovieDto> fetchMoviesList() {
         final List<Movie> movies = this.movieRepository.findAll();
         if (movies.isEmpty()) {
+            log.error("There are no movies in db");
             throw new NotFoundException(NO_MOVIES_FOUND.getErrorDescription());
         }
         log.info("Fetching all movies in db");
@@ -139,7 +144,7 @@ public class MovieService {
         final Optional<Movie> validatingMovie = this.movieRepository.findTopByTitleIgnoreCase(
                 movieCreationDto.getTitle());
         if (validatingMovie.isPresent()) {
-            log.error("Movie already exists in db");
+            log.error("Movie " + movieCreationDto.getTitle() + " already exists in db");
             throw new MovieException(MOVIE_ALREADY_EXISTS.getErrorDescription());
         }
         final Movie movie = this.movieMapper.movieCreationDtoToMovie(movieCreationDto);

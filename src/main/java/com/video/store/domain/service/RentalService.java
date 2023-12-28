@@ -43,18 +43,22 @@ public class RentalService {
      */
     public CustomerDto movieRental(MovieRentalDto movieRentalDto) {
         final Customer customer = this.customerService.findCustomerById(movieRentalDto.getCustomerId());
+        log.info("Customer with id " + movieRentalDto.getCustomerId() + " found");
         final List<Movie> movieList = this.movieService.findMoviesById(movieRentalDto.getMoviesIds());
         if (!customer.getAbleToRent()) {
+            log.error("Customer is not able to rent");
             throw new CustomerException(CUSTOMER_CANNOT_RENT.getErrorDescription());
         }
         for (Movie movie : movieList) {
             if (movie.getNumberOfCopies() < 1) {
+                log.error("Movie can't be rented. There are no more copies");
                 throw new MovieException(MOVIE_CANNOT_BE_RENTED.getErrorDescription());
             } else if (customer.getRentedMovies().contains(movie)) {
                 log.error("Customer has already rented the film with id " + movie.getId());
                 throw new CustomerException(CUSTOMER_HAS_ALREADY_RENTED_THIS_FILM.getErrorDescription());
             }
             customer.getRentedMovies().add(movie);
+            log.info(movie.getTitle() + " added to customer's rented movies");
             customer.setAvailableMoviesCount(customer.getAvailableMoviesCount() - 1);
             if (customer.getRentedMovies().size() >= 5) {
                 customer.setAbleToRent(false);
@@ -63,6 +67,7 @@ public class RentalService {
             customerRepository.save(customer);
             movieRepository.save(movie);
         }
+        log.info("Movie rental finished");
         return this.customerMapper.customerToCustomerDto(customer);
     }
 
@@ -78,9 +83,11 @@ public class RentalService {
         final List<Movie> movieList = this.movieService.findMoviesById(movieReturnDto.getMoviesIds());
         for (Movie movie : movieList) {
             if (!customer.getRentedMovies().contains(movie)) {
+                log.error("Customer didn't rent the movie with id " + movie.getId());
                 throw new MovieException(CUSTOMER_DID_NOT_RENT_THIS_MOVIE.getErrorDescription());
             }
             customer.getRentedMovies().remove(movie);
+            log.info(movie.getTitle() + " removed from customer's rented movies");
             customer.setAvailableMoviesCount(customer.getAvailableMoviesCount() + 1);
             if (customer.getRentedMovies().size() < 5) {
                 customer.setAbleToRent(true);
@@ -89,6 +96,7 @@ public class RentalService {
             customerRepository.save(customer);
             movieRepository.save(movie);
         }
+        log.info("Movie return finished");
         return this.customerMapper.customerToCustomerDto(customer);
     }
 }
